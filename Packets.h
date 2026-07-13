@@ -6,60 +6,71 @@ enum class PacketType : uint16_t
 {
 	ConnectRequest	= 0x1,
 	ConnectResponse,
-
 	RegisterRequest,
 	RegisterResponse,
-
 	AuthRequest,
 	AuthResponse,
-
 	MessageSend,
 	DisconnectRequest
 };
 
-
-struct ParentPacket
+// общий заголовок для всех пакетов
+struct PacketHeader
 {
 public:
 	PacketType type_;
-	uint32_t messageID_	= 0;
-	uint32_t sessionID_	= 0;
-	uint16_t messageLen_	= 0;
+	uint32_t messageID_  = 0;
+	uint32_t sessionID_  = 0;
+	uint16_t messageLen_ = 0;
+	explicit PacketHeader(PacketType t): type_(t){}
 };
 
-struct ConnectRequestPacket:	public ParentPacket
+struct ConnectRequestPacket
 {
-	ConnectRequestPacket(){ type_ = PacketType::ConnectRequest;	}
+	PacketHeader header;
+	ConnectRequestPacket(): header(PacketType::ConnectRequest){}
 };
-struct ConnectResponsePacket:	public ParentPacket
+struct ConnectResponsePacket
 {
-	ConnectResponsePacket(){ type_ = PacketType::ConnectResponse;	}
+	PacketHeader header;
+	ConnectResponsePacket(): header(PacketType::ConnectResponse){}
 };
 
-struct RegisterRequestPacket:	public ParentPacket
+struct RegisterRequestPacket
 {
-public:
+	PacketHeader header;
 	std::string username;
 	std::string password;	// change later to hash or smth
-
-	RegisterRequestPacket(){ type_ = PacketType::RegisterRequest; }
+	RegisterRequestPacket(): header(PacketType::RegisterRequest){}
 };
-struct RegisterResponsePacket:	public ParentPacket{	RegisterResponsePacket(){ type_ = PacketType::RegisterResponse;	}	};
-
-struct AuthRequestPacket:	public ParentPacket
+struct RegisterResponsePacket
 {
-public:
+	PacketHeader header;
+	RegisterResponsePacket(): header(PacketType::RegisterResponse){}
+};
+
+struct AuthRequestPacket
+{
+	PacketHeader header;
 	std::string username;
 	std::string password;	// change later to hash or smth
-
-	AuthRequestPacket(){ type_ = PacketType::AuthRequest; }
+	AuthRequestPacket(): header(PacketType::AuthRequest){}
 };
-struct AuthResponsePacket:	public ParentPacket{	AuthResponsePacket()	{ type_ = PacketType::AuthResponse;	}	};
-
-struct MessageSend:	public ParentPacket
+struct AuthResponsePacket
 {
-public:
-	
+	PacketHeader header;
+	AuthResponsePacket(): header(PacketType::AuthResponse){}
+};
+
+struct MessageSend
+{
+	PacketHeader header;
+};
+
+struct DisconnectRequestPacket
+{
+	PacketHeader header;
+	DisconnectRequestPacket(): header(PacketType::DisconnectRequest) {}
 };
 
 
