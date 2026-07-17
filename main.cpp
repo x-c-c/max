@@ -1,9 +1,5 @@
 #include "ServerStartStop.h"
 
-
-
-
-
 int main(int argc, char* argv[])
 {
 	ServerConfig config;

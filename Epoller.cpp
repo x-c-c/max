@@ -33,20 +33,6 @@ void Epoller::handleNewConnection(int serverFd)
 	}
 }
 
-void Epoller::handleClientData(int clientFd)
-{
-	char buffer[1024]{};
-	ssize_t bytesRead = recv(clientFd, buffer, sizeof(buffer), 0);
-if (bytesRead > 0)
-	{
-	// обработка данных
-	}
-else
-	{
-		closeConnection(clientFd);
-	}
-}
-
 void Epoller::closeConnection(int fd)
 {
 	removeFdFromEpoll(fd);
@@ -77,7 +63,7 @@ void Epoller::startEpollLoop(int serverSocketFd)
 				if (sockFd == serverSocketFd)
 					handleNewConnection(sockFd);
 				else
-					handleClientData(sockFd);
+					// give client_sockfd to class;
 			}
 		}
 	}

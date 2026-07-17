@@ -14,7 +14,6 @@ private:
 	void addFdToEpoll(int fd, uint32_t events);
 	void removeFdFromEpoll(int fd);
 	void handleNewConnection(int serverFd);
-	void handleClientData(int clientFd);
 	void closeConnection(int fd);
 	
 public:

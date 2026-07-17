@@ -5,8 +5,18 @@
 class Serializer
 {
 public:
-	void serialize_uint16(const uint16_t field, std::vector<uint8_t>& buf, size_t& pos);
-	void serialize_uint32(const uint32_t field, std::vector<uint8_t>& buf, size_t& pos);
-	std::vector<uint8_t> serializeHeader(const PacketHeader& header);
-	std::vector<uint8_t> serializeBody(const PacketHeader& header);
+	// сборка полного пакета [заголовок] + [тело]
+	static std::vector<uint8_t> buildConnectRequest(	uint32_t messageID, uint32_t sessionID);
+	static std::vector<uint8_t> buildConnectResponse(	uint32_t messageID, uint32_t sessionID);
+	static std::vector<uint8_t> buildRegisterRequest(	uint32_t messageID, uint32_t sessionID, const RegisterRequestPacket& packet);
+	static std::vector<uint8_t> buildRegisterResponse(	uint32_t messageID, uint32_t sessionID, const RegisterResponsePacket& packet);
+	static std::vector<uint8_t> buildAuthRequest(		uint32_t messageID, uint32_t sessionID, const AuthRequestPacket& packet);
+	static std::vector<uint8_t> buildAuthResponse(		uint32_t messageID, uint32_t sessionID, const AuthResponsePacket& packet);
+	static std::vector<uint8_t> buildMessageSend(		uint32_t messageID, uint32_t sessionID, const MessageSendPacket& packet);
+	static std::vector<uint8_t> buildDisconnectRequest(	uint32_t messageID, uint32_t sessionID);
+	
+private:
+	static void appendBytes(std::vector<uint8_t>& dest, const void* src, size_t count);
+	void writeUint16(std::vector<uint8_t>& buf, uint16_t val);
+	void writeString(std::vector<uint8_t>& buf, const std::string& str);
 };

@@ -4,73 +4,66 @@
 
 enum class PacketType : uint16_t
 {
-	ConnectRequest	= 0x1,
-	ConnectResponse,
-	RegisterRequest,
-	RegisterResponse,
-	AuthRequest,
-	AuthResponse,
-	MessageSend,
-	DisconnectRequest
+	ConnectRequest		= 0x1,
+	ConnectResponse		= 0x2,
+	RegisterRequest		= 0x3,
+	RegisterResponse	= 0x4,
+	AuthRequest			= 0x5,
+	AuthResponse		= 0x6,
+	MessageSend			= 0x7,
+	DisconnectRequest	= 0x8
 };
 
-// общий заголовок для всех пакетов
-struct PacketHeader
+#pragma pack(push, 1)
+// бинарный заголовок, плотно упакованный, используется только внутри Serializer
+struct PacketHeaderRaw
 {
-public:
-	PacketType type_;
-	uint32_t messageID_  = 0;
-	uint32_t sessionID_  = 0;
-	uint16_t messageLen_ = 0;
-	explicit PacketHeader(PacketType t): type_(t){}
+	uint16_t type_;
+	uint32_t messageID_		= 0;
+	uint32_t sessionID_		= 0;
+	uint16_t messageLen_	= 0;
 };
+#pragma pack(pop)
 
 struct ConnectRequestPacket
 {
-	PacketHeader header;
-	ConnectRequestPacket(): header(PacketType::ConnectRequest){}
+	// без тела
 };
 struct ConnectResponsePacket
 {
-	PacketHeader header;
-	ConnectResponsePacket(): header(PacketType::ConnectResponse){}
+	// без тела
 };
 
 struct RegisterRequestPacket
 {
-	PacketHeader header;
 	std::string username;
-	std::string password;	// change later to hash or smth
-	RegisterRequestPacket(): header(PacketType::RegisterRequest){}
+	std::string password;	// изменить позже на ХЭШ
 };
 struct RegisterResponsePacket
 {
-	PacketHeader header;
-	RegisterResponsePacket(): header(PacketType::RegisterResponse){}
+	uint8_t success;	// 1 - true, 0 - false
 };
 
 struct AuthRequestPacket
 {
-	PacketHeader header;
 	std::string username;
-	std::string password;	// change later to hash or smth
-	AuthRequestPacket(): header(PacketType::AuthRequest){}
+	std::string password;	// изменить позже на ХЭШ
 };
 struct AuthResponsePacket
 {
-	PacketHeader header;
-	AuthResponsePacket(): header(PacketType::AuthResponse){}
+	uint8_t success;	// 1 - true, 0 - false
 };
 
 struct MessageSend
 {
-	PacketHeader header;
+	uint32_t senderID;
+	uint32_t chatID;
+	std::string text;
 };
 
 struct DisconnectRequestPacket
 {
-	PacketHeader header;
-	DisconnectRequestPacket(): header(PacketType::DisconnectRequest) {}
+	// без тела
 };
 
 
